@@ -16,6 +16,14 @@ function Toast(options) {
 
     this.toastContainerEl = document.querySelector('.toastjs-container');
     this.toastEl = document.querySelector('.toastjs');
+
+    this.toastMainContainerEl = document.querySelector('toastjs-main');
+    if(!this.toastMainContainerEl) {
+        this.toastMainContainerEl = document.createElement('div');
+        this.toastMainContainerEl.classList.add('toastjs-main');
+
+        document.body.appendChild(this.toastMainContainerEl);
+    }
     
     this._init();
 }
@@ -32,7 +40,11 @@ Toast.prototype._createElements = function() {
         this.toastEl.classList.add('toastjs');
 
         this.toastContainerEl.appendChild(this.toastEl);
-        document.body.appendChild(this.toastContainerEl);
+
+        this.toastMainContainerEl.appendChild(this.toastContainerEl);
+        document.body.appendChild(this.toastMainContainerEl);
+       // document.body.appendChild(this.toastContainerEl);
+        this.toastMainContainerEl.innerHTML = this.toastMainContainerEl.innerHTML;
 
         setTimeout(() => resolve(), 500);
     })
@@ -42,7 +54,7 @@ Toast.prototype._addEventListeners = function() {
 
     document.querySelector('.toastjs-btn--close').addEventListener('click', () => {
         this._close();
-    })
+    });
 
     if ( this.options.customButtons ) {
         const customButtonsElArray = Array.prototype.slice.call( document.querySelectorAll('.toastjs-btn--custom') );
@@ -81,7 +93,7 @@ Toast.prototype._open = function() {
     if ( this.options.customButtons ) {
         customButtons = this.options.customButtons.map( (customButton, index) => {
             return `<button type="button" class="toastjs-btn toastjs-btn--custom">${customButton.text}</button>`
-        } )
+        } );
         customButtons = customButtons.join('');
     }
 
@@ -90,6 +102,8 @@ Toast.prototype._open = function() {
         <button type="button" class="toastjs-btn toastjs-btn--close">Close</button>
         ${customButtons}
     `;
+
+    this.toastMainContainerEl.appendChild(this.toastContainerEl);
 
     this.focusedElBeforeOpen = document.activeElement;
     document.querySelector('.toastjs-btn--close').focus();

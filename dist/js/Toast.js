@@ -19,6 +19,14 @@ function Toast(options) {
     this.toastContainerEl = document.querySelector('.toastjs-container');
     this.toastEl = document.querySelector('.toastjs');
 
+    this.toastMainContainerEl = document.querySelector('toastjs-main');
+    if (!this.toastMainContainerEl) {
+        this.toastMainContainerEl = document.createElement('div');
+        this.toastMainContainerEl.classList.add('toastjs-main');
+
+        document.body.appendChild(this.toastMainContainerEl);
+    }
+
     this._init();
 }
 
@@ -36,7 +44,11 @@ Toast.prototype._createElements = function () {
         _this.toastEl.classList.add('toastjs');
 
         _this.toastContainerEl.appendChild(_this.toastEl);
-        document.body.appendChild(_this.toastContainerEl);
+
+        _this.toastMainContainerEl.appendChild(_this.toastContainerEl);
+        document.body.appendChild(_this.toastMainContainerEl);
+        // document.body.appendChild(this.toastContainerEl);
+        _this.toastMainContainerEl.innerHTML = _this.toastMainContainerEl.innerHTML;
 
         setTimeout(function () {
             return resolve();
@@ -94,6 +106,8 @@ Toast.prototype._open = function () {
     }
 
     this.toastEl.innerHTML = '\n        <p>' + this.options.message + '</p>\n        <button type="button" class="toastjs-btn toastjs-btn--close">Close</button>\n        ' + customButtons + '\n    ';
+
+    this.toastMainContainerEl.appendChild(this.toastContainerEl);
 
     this.focusedElBeforeOpen = document.activeElement;
     document.querySelector('.toastjs-btn--close').focus();
