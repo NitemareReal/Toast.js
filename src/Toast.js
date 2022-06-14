@@ -119,5 +119,4 @@ Toast.prototype._init = function() {
         this._addEventListeners();
     });
 
-
 };
